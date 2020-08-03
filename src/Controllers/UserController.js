@@ -22,6 +22,8 @@ module.exports = {
     *   }
     */
     async show(req, res){
+
+        // Validate Data
         
         // Search for user in DB
         const user = await db.collection('users')
@@ -41,7 +43,22 @@ module.exports = {
 
     },
 
+    /*
+    *   Insert user into DB
+    *   
+    *   @param {string} name - Name of the user
+    *   @param {string} email - Email of the user
+    *   
+    */
     async store(req, res){
+
+        // Validate data
+
+        // Check if the user is already registered in DB
+
+        // Register the user in DB
+
+        // Return created user data
 
     },
 
