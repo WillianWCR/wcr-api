@@ -2,9 +2,9 @@ const db = require('../../database');
 
 function UserModel(){
 
-    this.id;
-    this.name;
-    this.email;
+    this.constructor = function(){
+        
+    }
 
     this.sendEmail = function(){
         console.log("Sending email to " + this.email);
