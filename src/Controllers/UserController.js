@@ -2,6 +2,7 @@ const db = require('../../database');
 const User = require('../Models/UserModel');
 const { QuerySnapshot } = require('@google-cloud/firestore');
 const { urlencoded } = require('body-parser');
+const UserValidation = require('../Validations/UserValidation');
 
 module.exports = {
 
@@ -24,6 +25,10 @@ module.exports = {
     async show(req, res){
 
         // Validate Data
+        const { error } = UserValidation.show(req.params);
+        if(error) return res.status(400).json({
+            'error': error.details[0].message
+        });
         
         // Search for user in DB
         const user = await db.collection('users')
@@ -32,6 +37,11 @@ module.exports = {
             let data = querySnapshot.data();
             //data.id = querySnapshot.id;
             return data;
+        });
+
+        // Check if the user is registered in DB
+        if(!user) return res.status(404).json({
+            'error': 'User not found in database'
         });
 
         // Return user data
@@ -46,15 +56,30 @@ module.exports = {
     /*
     *   Insert user into DB
     *   
-    *   @param {string} name - Name of the user
-    *   @param {string} email - Email of the user
+    *   @body {string} name - Name of the user
+    *   @body {string} email - Email of the user
     *   
     */
     async store(req, res){
 
         // Validate data
+        const { error } = UserValidation.store(req.body);
+        if(error) return res.status(400).json({
+            'error': error.details[0].message
+        });
 
         // Check if the user is already registered in DB
+        const emailExists = await db.collection('users')
+        .where('email', '==', req.body.email)
+        .get().then(querySnapshot => {
+            console.log(querySnapshot.data);
+            if(querySnapshot.empty) return false;
+            return true;
+        });
+
+        if(emailExists) return res.status(404).json({
+            'error': 'User already registered'
+        });
 
         // Register the user in DB
 
