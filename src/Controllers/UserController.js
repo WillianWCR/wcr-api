@@ -22,10 +22,10 @@ module.exports = {
     *       email: String
     *   }
     */
-    async show(req, res){
+    async showById(req, res){
 
         // Validate Data
-        const { error } = UserValidation.show(req.params);
+        const { error } = UserValidation.showById(req.params);
         if(error) return res.status(400).json({
             'error': error.details[0].message
         });
@@ -52,6 +52,93 @@ module.exports = {
         });
 
     },
+
+    /*
+    *   Search for unique user by E-mail
+    *   
+    *   @param {string} email - E-mail of the user
+    * 
+    *   @returns
+    *   {
+    *       id: String
+    *       name: String
+    *       email: String
+    *   }
+    */
+    async showByEmail(req, res){
+
+        // Validate Data
+        const { error } = UserValidation.showByEmail(req.params);
+        if(error) return res.status(400).json({
+            'error': error.details[0].message
+        });
+        
+        // Search for user in DB
+        const user = await db.collection('users')
+        .where('email', '==', req.params.email)
+        .get().then(querySnapshot => {
+            let data = querySnapshot.data();
+            //data.id = querySnapshot.id;
+            return data;
+        });
+
+        // Check if the user is registered in DB
+        if(!user) return res.status(404).json({
+            'error': 'User not found in database'
+        });
+
+        // Return user data
+        res.json({
+            //id: user.id,
+            name: user.name,
+            email: user.email
+        });
+
+    },
+
+    /*
+    *   Search for unique user by username
+    *   
+    *   @param {string} username - Username of the user
+    * 
+    *   @returns
+    *   {
+    *       id: String
+    *       name: String
+    *       email: String
+    *   }
+    */
+    async showByUsername(req, res){
+
+        // Validate Data
+        const { error } = UserValidation.showByUsername(req.params);
+        if(error) return res.status(400).json({
+            'error': error.details[0].message
+        });
+        
+        // Search for user in DB
+        const user = await db.collection('users')
+        .where('username', '==', req.params.username)
+        .get().then(querySnapshot => {
+            let data = querySnapshot.data();
+            //data.id = querySnapshot.id;
+            return data;
+        });
+
+        // Check if the user is registered in DB
+        if(!user) return res.status(404).json({
+            'error': 'User not found in database'
+        });
+
+        // Return user data
+        res.json({
+            //id: user.id,
+            name: user.name,
+            email: user.email
+        });
+
+    },
+        
 
     /*
     *   Insert user into DB

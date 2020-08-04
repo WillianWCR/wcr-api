@@ -6,13 +6,13 @@ const UserController = require('../Controllers/UserController');
 routes.post('/', UserController.store);
 
 // Retrieve a user
-routes.get('/:id', UserController.show);
+routes.get('/:id', UserController.showById);
 
 // Retrieve a user by email
-routes.get('email/:email', UserController.show);
+routes.get('email/:email', UserController.showByEmail);
 
 // Retrieve a user by username
-routes.get('username/:username', UserController.show);
+routes.get('username/:username', UserController.showByUsername);
 
 // Update user
 routes.put('/:id', UserController.update);
