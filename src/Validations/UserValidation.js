@@ -13,7 +13,7 @@ module.exports.showById = data => {
 }
 
 // Show User by E-mail Validation
-module.exports.showById = data => {
+module.exports.showByEmail = data => {
 
     const schema = Joi.object({
         email: Joi.string()
@@ -26,7 +26,7 @@ module.exports.showById = data => {
 }
 
 // Show User by Username Validation
-module.exports.showById = data => {
+module.exports.showByUsername = data => {
 
     const schema = Joi.object({
         username: Joi.string()
@@ -46,6 +46,9 @@ module.exports.store = data => {
             .required(),
         email: Joi.string()
             .email()
+            .min(6)
+            .required(),
+        password: Joi.string()
             .min(6)
             .required()
     });

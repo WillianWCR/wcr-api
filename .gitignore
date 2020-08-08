@@ -105,3 +105,4 @@ dist
 
 # Remove important files
 secret-key.json
+.env

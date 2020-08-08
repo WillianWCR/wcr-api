@@ -1,20 +1,7 @@
 const express = require('express');
 const routes = express.Router();
+const AuthController = require('../Controllers/AuthController');
 
-/*
-*   R
-*
-*/
-routes.post('/', async (req, res) => {
-
-    // Validate Data
-
-    // Check if the email exists
-
-    // Check if the password is correct
-
-    // Create and assign a token
-
-});
+routes.post('/', AuthController.login);
 
 module.exports = routes;

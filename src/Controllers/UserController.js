@@ -1,7 +1,6 @@
 const db = require('../../database');
-const User = require('../Models/UserModel');
-const { QuerySnapshot } = require('@google-cloud/firestore');
-const { urlencoded } = require('body-parser');
+const { createId } = require('../../functions');
+const bcrypt = require('bcryptjs');
 const UserValidation = require('../Validations/UserValidation');
 
 module.exports = {
@@ -152,25 +151,40 @@ module.exports = {
         // Validate data
         const { error } = UserValidation.store(req.body);
         if(error) return res.status(400).json({
-            'error': error.details[0].message
+            error: error.details[0].message
         });
 
         // Check if the user is already registered in DB
         const emailExists = await db.collection('users')
         .where('email', '==', req.body.email)
         .get().then(querySnapshot => {
-            console.log(querySnapshot.data);
             if(querySnapshot.empty) return false;
             return true;
         });
 
         if(emailExists) return res.status(404).json({
-            'error': 'User already registered'
+            error: 'User already registered'
         });
 
+        // Hash password
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash(req.body.password, salt);
+
         // Register the user in DB
+        let userId = await createId('users');
+        let user = await db.collection('users').doc(userId)
+        .set({
+            name: req.body.name,
+            email: req.body.email,
+            password: hashedPassword,
+        });
 
         // Return created user data
+        res.status(200).json({
+            status: 200,
+            message: "User registered successfully",
+            userId: userId
+        })
 
     },
 
