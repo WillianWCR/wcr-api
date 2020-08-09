@@ -2,6 +2,7 @@ const db = require('../../database');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const AuthValidation = require('../Validations/AuthValidation');
+const User = require('../Models/UserModel');
 
 module.exports = {
 
@@ -27,6 +28,11 @@ module.exports = {
                 }
             });
             return userData;
+        });
+
+        usertest = new User();
+        usertest.findOne({
+            email: "willian@willianwcr.com.br"
         });
         
         if(!user) return res.status(400).json({
