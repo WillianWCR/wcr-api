@@ -15,24 +15,9 @@ module.exports = {
         });
 
         // Check if the email exists
-        const user = await db.collection('users')
-        .where('email', '==', req.body.email).get()
-        .then(async querySnapshot => {
-            let userData;
-            await querySnapshot.forEach(documentSnapshot => {
-                if(documentSnapshot.empty){
-                    return false;
-                }else{
-                    userData = documentSnapshot.data();
-                    userData.id = documentSnapshot.id;
-                }
-            });
-            return userData;
-        });
-
-        usertest = new User();
-        usertest.findOne({
-            email: "willian@willianwcr.com.br"
+        let user = new User();
+        user = await user.findOne({
+            email: req.body.email
         });
         
         if(!user) return res.status(400).json({
