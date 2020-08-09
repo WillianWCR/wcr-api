@@ -15,20 +15,14 @@ module.exports = function(){
     };
 
     this.findOne = async function(params){
-        console.log(params);
+        let collection = db.collection('users');
+        let query = collection;
 
-        let query = "";
-        
-        for(let param in params){
-            query += '.where("' + param + '", "==", "' + params[param] + '")';
-            console.log(params[param]);
+        for(param in params){
+            query = query.where(param, '==', params[param]);
         }
 
-        console.log(query);
-            
-        return await db.collection('users')
-        .bind(eval(query))
-        .get().then(async querySnapshot => {
+        return await query.get().then(async querySnapshot => {
             let userData;
             await querySnapshot.forEach(documentSnapshot => {
                 if(documentSnapshot.empty){
@@ -36,9 +30,9 @@ module.exports = function(){
                 }else{
                     userData = documentSnapshot.data();
                     userData.id = documentSnapshot.id;
+                    return true;
                 }
             });
-            console.log(userData);
             return userData;
         });
 
