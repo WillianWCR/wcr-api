@@ -34,7 +34,7 @@ module.exports = {
         .doc(req.params.id)
         .get().then(querySnapshot => {
             let data = querySnapshot.data();
-            //data.id = querySnapshot.id;
+            data.id = querySnapshot.id;
             return data;
         });
 
@@ -45,7 +45,7 @@ module.exports = {
 
         // Return user data
         res.json({
-            //id: user.id,
+            id: user.id,
             name: user.name,
             email: user.email
         });
