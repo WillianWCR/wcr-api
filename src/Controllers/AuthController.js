@@ -39,7 +39,7 @@ module.exports = {
             message: "Login successfully",
             data: {
                 userId: user.id,
-                token: token
+                __token: token
             }
         });
 
